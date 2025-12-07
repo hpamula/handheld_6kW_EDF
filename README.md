@@ -10,3 +10,4 @@ The main points are that 12S batteries have to be as small as possible while not
 Chart depicts only batteries from https://www.smc-racing.com/index.php?route=product/category&path=67_119&limit=100 and all (26) of them as of 2025-12-07.
 
 ![](6s_smc_racing_batteries/clustered_battery_chart.png)
+
