@@ -1,0 +1,112 @@
+site https://www.smc-racing.com/index.php?route=product/category&path=67_119&limit=100 contains list of elements document.querySelector("#content > div:nth-child(7)")
+each of them can be clicked like this (this if the first element clicked) document.querySelector("#content > div:nth-child(7) > div:nth-child(1) > div > div.image > a").click()
+iterate over all elements from the list and after clicking each element read all of it properties and if property could not have been read because the element does not exist, also handle that. These are properties to read:
+name = document.querySelector("#tab-description > h4 > span").textContent
+mah = document.querySelector("#tab-description > p:nth-child(4) > span").textContent
+voltage = document.querySelector("#tab-description > h3:nth-child(5) > p:nth-child(1) > span").textContent
+C_rate = document.querySelector("#tab-description > h3:nth-child(5) > p:nth-child(2) > span").textContent
+power_factor = document.querySelector("#tab-description > h3:nth-child(5) > p:nth-child(3) > span:nth-child(1)").textContent
+size = document.querySelector("#tab-description > h3:nth-child(5) > p:nth-child(4) > span").textContent
+weight = document.querySelector("#tab-description > h3:nth-child(5) > p:nth-child(5) > span:nth-child(1)").textContent
+wire_size = document.querySelector("#tab-description > h3:nth-child(5) > span").textContent
+charge_rate = document.querySelector("#tab-description > h3:nth-child(6) > span").textContent
+Return array of arrays, where first dimension is element and second are its all properites. Write JS script to paste into web console which will do that and return that array of arrays as text which can be copied. Use 2 space indent.
+
+
+
+well, this works ok, but works only for half of elements due to differences in subsites. Instead use this keywords to search for fields with text, so if there's element in which text starts from keywords, then save whole element value with this keyword truncated. Keywords:
+"True mAh +/- 5%:", "Voltage:", "C rate:", "Power Factor:", "Size:", "Weight:", "Wire size:", "Charge rate:"
+
+
+
+why document.querySelector("#tab-description > h3:nth-child(4) > span") wasn't included in searching for mah? like shouldnt #tab-description h3 candidate work? anyway, search now in all elements
+
+
+
+w8, but why now it does now trim true mah keyword?:
+[
+  [
+    "HCL-EC 22.2V-7200mAh-100C pack.",
+    "True mAh +/- 5%:     7200mAh",
+    "22.2V",
+    "100C",
+    "TBD For more information click",
+    "57mm x 50mm x 160mm",
+    "960gr",
+    "10AWG",
+    "1C to 5C please note that a higher charge rate will put less mAh into the pack and will reduce cycle life"
+  ],
+also sorry, the previous version worked, just add this keywords: "mAh +/- 5%:" with the same group as "True mAh +/- 5%:", "Factory C rate:" with the same group as "C rate:"
+
+
+
+why adding    { 
+      name: "Availability:", 
+      aliases: ["Availability:"] 
+    },
+    { 
+      name: "Product_code:", 
+      aliases: ["Product Code:"] 
+    },
+    { 
+      name: "$", 
+      aliases: ["$"] 
+    }
+didn't work? they might reside in document.querySelector("#content > div > div.col-sm-5") but it shouldnt matter I guess
+
+
+
+ok, great, whole data is saved in json named extracted_manual.json
+"Charge rate:" was dropped because every element has the same value written in it ("1C to 5C please note that a higher charge rate will put less mAh into the pack and will reduce cycle life"). I include whole json for you to properly handle making usful insights from its data. All charts do using matplotlib with dark theme style. Draw many charts to depict various things
+
+
+
+ok, now I scaled all batteries as if they were 6s
+write code in python which on 2D chart shows on x axis capacity in mah per cubic milimeter and on y capacity in mah per gram. By its side write capacity and C values. Make it circle if it has 8 AWG, square if 10 AWG and triangle if 12 AWG. Make it green if available in stock and red if not available.
+
+
+
+now on chart instead of x mah write x/100, so intead of e. g. 4900mah write 49<some greek letter to be exaplined in legenda>
+also make all indents 2 spaces
+also add price next to each points e. g. 80$
+also add "Power Factor:" value also with some greek letter to be exaplained in legenda, like cell voltage *100 after 100A for 5 seconds
+also next to the points add name, but no full, but instead categorize names and write their single letters shortcuts
+
+
+
+well, latex does not render properly
+
+
+
+any idea why not it render me an empty chart? I'm on windows, but idk id that's the cause
+
+
+
+great, now it works, add full names of shortened to letters names in legend
+also show C value like it was in earlier code versions and indentation of 2 spaces
+
+
+
+put legend in upper left area of drawing area (as there're there literally no data points)
+also make the point describtion be centered regarding left right over a point
+if power factor is unknown, just like with C write ? for consistency
+
+
+
+now connect with straight lines all datapaints which are in the same category (E, P, V, R , S), but so, that not all are connected with all, but that every data point has to be connected to its nearest neighbor
+
+
+
+the additional requirement is that all points from the same group has to to be conncted so that there exists a path from any to any of the same group. Also the total length of connections has to be minimum possible, so choose which to connect wisely
+
+
+
+well, look at the image, there's no way these zig zags are the shortest path, but I'll admit that for the most part it works as intended. Repair your code
+
+
+
+great, now it's perfect! Thanks! So from the chart it clearly seems like HCL-RS is by far the worst in terms of both gravimetric and volumetric density. HCL-HP ranges from bad to middle gravimetric density and bad to good volumetric. SRD-V4 is middle in both. HCL-HV2 ranges from bad-middle to excellent volumetric density and from middle to excellent gravimetric density. But for whatever reason HCL-EC which are supposed to be economy are actually by far the best from all battery packs ranging from good to excellent in both volumetric and gravimetric density. Also their the only category in which all batteries are available. In all other categories at least 1 is available except for HCL-V2 in which no battery is available. The problem with HCL-EC is though that so good batteries are at minimum 7.2 Ah, and all 5.2 Ah versions (which are only smaller available) actually have bad to middle gravimetric density but created a whole new category of horrible volumetric density being 50% worse than their 7.2 and 9 Ah counterparts from the same category. What do you think about these outcomes? What 2 6s batteries packs should I choose?
+
+
+
+why have u written MST Normalized in ax.set_title('SMC Battery Comparison (MST Normalized)', fontsize=16)
